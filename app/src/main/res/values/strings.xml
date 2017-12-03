@@ -10,4 +10,8 @@
     <string name="pref_sort_order_key">sortOrder</string>
     <string name="pref_most_popular">Most Popular</string>
     <string name="pref_highest_rated">Highest rated</string>
+    <string name="add_favourite">Add it to favorites?</string>
+    <string name="remove_favorite">Remove it from favorites?</string>
+    <string name="show_more">Show more</string>
+
 </resources>

@@ -30,29 +30,36 @@ public class MovieAaptor extends RecyclerView.Adapter<MovieAaptor.MovieViewHolde
     private List<Movie> movies;
     private int rowLayout;
     private Context context;
-//    public static final String IMAGE_URL_BASE_PATH = "http://image.tmdb.org/t/p/w342//";
+
+    public MovieAaptor() {
+    }
 
     public MovieAaptor(List<Movie> movies, int rowLayout, Context context) {
         this.movies = movies;
+
         this.rowLayout = rowLayout;
         this.context = context;
     }
 
+    public void add (Movie movie)
+    {
+        movies.add(movie);
+        notifyItemInserted(movies.size()-1);
+    }
+
+
     public class MovieViewHolder extends RecyclerView.ViewHolder {
         LinearLayout moviesLayout;
         TextView movieTitle;
-        TextView data;
-        TextView movieDescription;
         TextView rating;
         ImageView movieImage;
 
         public MovieViewHolder(View v) {
             super(v);
+
             moviesLayout = (LinearLayout) v.findViewById(R.id.movies_layout);
             movieImage = (ImageView) v.findViewById(R.id.movie_image);
             movieTitle = (TextView) v.findViewById(R.id.title);
-//            data = (TextView) v.findViewById(R.id.date);
-//            movieDescription = (TextView) v.findViewById(R.id.description);
             rating = (TextView) v.findViewById(R.id.rating);
 
             v.setOnClickListener(new View.OnClickListener() {
@@ -63,14 +70,14 @@ public class MovieAaptor extends RecyclerView.Adapter<MovieAaptor.MovieViewHolde
                     {
                         Movie movie = movies.get(pos);
                         Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra("original_title", movies.get(pos).getOriginalTitle());
-                        intent.putExtra("poster_path", movies.get(pos).getPosterPath());
-                        intent.putExtra("overview", movies.get(pos).getOverview());
-                        intent.putExtra("vote_average", Double.toString(movies.get(pos).getVoteAverage()));
-                        intent.putExtra("release_date", movies.get(pos).getReleaseDate());
+                        intent.putExtra("original_title", movie.getOriginalTitle());
+                        intent.putExtra("poster_path", movie.getPosterPath());
+                        intent.putExtra("overview", movie.getOverview());
+                        intent.putExtra("vote_average", Double.toString(movie.getVoteAverage()));
+                        intent.putExtra("release_date", movie.getReleaseDate());
+                        intent.putExtra("halfPosterPath", movie.getHalfPosterPath());
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-                        Toast.makeText(v.getContext(), "You Clicked "+movie.getOriginalTitle(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -82,29 +89,24 @@ public class MovieAaptor extends RecyclerView.Adapter<MovieAaptor.MovieViewHolde
                                                             int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
         return new MovieViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, final int position) {
-
         Glide.with(context).load(movies.get(position).getPosterPath())
                 .placeholder(R.drawable.ic_loadingcurved)
                 .error(android.R.drawable.sym_def_app_icon)
                 .into(holder.movieImage);
-//        Picasso.with(context)
-//                .load(image_url)
-//                .placeholder(android.R.drawable.sym_def_app_icon)
-//                .error(android.R.drawable.sym_def_app_icon)
-//                .into(holder.movieImage);
         holder.movieTitle.setText(movies.get(position).getTitle());
-//        holder.data.setText(movies.get(position).getReleaseDate());
-//        holder.movieDescription.setText(movies.get(position).getOverview());
         holder.rating.setText(Double.toString(movies.get(position).getVoteAverage()));
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        if(movies!= null && !movies.isEmpty()){
+            return movies.size();
+        }
+        else
+            return 0;
     }
 }

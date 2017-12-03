@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/content_details">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:id="@+id/image_header"
+                android:fitsSystemWindows="true"
+                android:scaleType="fitXY"
+                android:backgroundTint="@color/viewBg"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/release"
+                android:layout_marginStart="@dimen/layout_margin_left"
+                android:text="@string/release"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/release_date"
+                android:paddingBottom="@dimen/padding_layout"
+                android:paddingTop="5dp"
+                android:textSize="18sp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/plot"
+                android:layout_marginStart="@dimen/layout_margin_left"
+                android:text="@string/plot"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/plotsyn"
+                android:layout_marginStart="@dimen/layout_margin_left"
+                android:paddingLeft="@dimen/padding_layout"
+                android:paddingBottom="@dimen/padding_layout"
+                android:paddingTop="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating"
+                android:layout_marginStart="@dimen/layout_margin_left"
+                android:text="@string/rating"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:paddingBottom="@dimen/padding_layout"
+                android:paddingTop="5dp"
+                android:layout_gravity="center"
+                android:isIndicator="true"
+                style="?attr/ratingBarStyle"/>
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

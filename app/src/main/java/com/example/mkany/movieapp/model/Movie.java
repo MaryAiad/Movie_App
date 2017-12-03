@@ -19,7 +19,7 @@ public class Movie {
     @SerializedName("release_date")
     private String releaseDate;
     @SerializedName("genre_ids")
-    private List<Integer> genreIds = new ArrayList<Integer>();
+    private List<Integer> genreIds = new ArrayList<>();
     @SerializedName("id")
     private Integer id;
     @SerializedName("original_title")
@@ -39,6 +39,10 @@ public class Movie {
     @SerializedName("vote_average")
     private Double voteAverage;
 
+    public Movie()
+    {
+
+    }
     public Movie(String posterPath, boolean adult, String overview, String releaseDate, List<Integer> genreIds, Integer id,
                  String originalTitle, String originalLanguage, String title, String backdropPath, Double popularity,
                  Integer voteCount, Boolean video, Double voteAverage) {
@@ -67,6 +71,9 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
+    public String getHalfPosterPath(){
+        return posterPath;
+    }
     public boolean isAdult() {
         return adult;
     }

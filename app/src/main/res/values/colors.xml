@@ -2,14 +2,15 @@
 <resources>
     <color name="colorPrimary">#424242</color>
     <color name="colorPrimaryDark">#212121</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FDD835</color>
+    <color name="colorAccentDark">#FFC400</color>
     <color name="viewBg">#f1f5f8</color>
     <color name="movieTitle">#4c4c4c</color>
     <color name="white">#fff</color>
     <color name="background">#99000000</color>
 
     <color name="orange">#FF3909</color>
-    <color name="colorAccentDark">#00B482</color>
+    <!--<color name="colorAccentDark">#00B482</color>-->
 
     <color name="colorBlack">#555555</color>
     <color name="colorWhite">#FFFFFF</color>
