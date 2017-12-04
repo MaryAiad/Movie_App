@@ -19,6 +19,5 @@ public class TaskContract {
         public static final String COL_MOVIE_RATING = "rating";
         public static final String COL_MOVIE_Release = "releaseDate";
         public static final String COL_MOVIE_Overview = "overview";
-
     }
 }

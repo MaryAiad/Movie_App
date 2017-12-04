@@ -46,12 +46,14 @@ public class Favorites extends Fragment {
         View view = inflater.inflate((R.layout.top_rated),container,false);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.main_content);
-        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
 
         movieList = readDB();
+
         recyclerView = (RecyclerView) view.findViewById(R.id.tab_one_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         textView = (TextView) view.findViewById(R.id.show_more);
         textView.setVisibility(View.INVISIBLE);
 
@@ -62,9 +64,18 @@ public class Favorites extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         }
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        movieAaptor = new FavoritesAdaptor(movieList, R.layout.favorite_card, getContext());
 
+        movieAaptor = new FavoritesAdaptor(movieList, R.layout.favorite_card, getContext());
         recyclerView.setAdapter(movieAaptor);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                readDB();
+                movieAaptor.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "Movies Refreshed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -116,6 +127,11 @@ public class Favorites extends Fragment {
         }
         cursor.close();
         database.close();
+
+        if(swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
         return movies;
     }
 }

@@ -45,25 +45,17 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
     }
 
     public FavoritesAdaptor() {
-        this.movies = new ArrayList<>();
     }
 
     public void add (Movie movie)
     {
+        if(movies == null){
+            movies = new ArrayList<>();
+        }
         movies.add(movie);
-        notifyItemInserted(movies.size()-1);
+        notifyItemInserted(movies.size() - 1);
     }
 
-    public int search(Movie movie){
-        System.err.println("sssss "+movies.size()+ "name "+movie.getOriginalTitle());
-        for(int i = 0; i< movies.size(); i++ ){
-            if(movie.getOriginalTitle().equals(movies.get(i).getOriginalTitle())){
-                System.err.println("yes "+i);
-                return i;
-            }
-        }
-        return 0;
-    }
     public class MovieViewHolder extends RecyclerView.ViewHolder {
         LinearLayout moviesLayout;
         TextView movieTitle;
@@ -108,7 +100,7 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
     }
 
     @Override
-    public void onBindViewHolder(final FavoritesAdaptor.MovieViewHolder holder, final int position) {
+    public void onBindViewHolder(final MovieViewHolder holder, final int position) {
         Glide.with(context).load(movies.get(position).getPosterPath())
                 .placeholder(R.drawable.ic_loadingcurved)
                 .error(android.R.drawable.sym_def_app_icon)

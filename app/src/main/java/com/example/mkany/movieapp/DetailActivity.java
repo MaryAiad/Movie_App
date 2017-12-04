@@ -3,6 +3,7 @@ package com.example.mkany.movieapp;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -33,7 +34,7 @@ public class DetailActivity extends AppCompatActivity {
     RelativeLayout bottomView;
     String thubnail, movieName, overview, dateRelease, halfPath;
     Double rating;
-
+    Movie movie;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,34 +71,80 @@ public class DetailActivity extends AppCompatActivity {
             plotSynopsis.setText(overview);
             releaseDate.setText(dateRelease);
             ratingBar.setRating((float) (rating/2));
+
+            movie = new Movie();
+            movie.setOriginalTitle(movieName);
+            movie.setPosterPath(halfPath);
+            movie.setOverview(overview);
+            movie.setReleaseDate(dateRelease);
+            movie.setVoteAverage(rating);
+
+            if (search(movie)){
+                star.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                bottomStar.setBackgroundResource(R.drawable.ic_star_black_24dp);
+
+                star.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Added already to favourites", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                bottomStar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Added already to favourites", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else{
+                star.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+                bottomStar.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+
+                star.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Add it to favourite", Toast.LENGTH_SHORT).show();
+                        star.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                        bottomStar.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                        addDB();
+                    }
+                });
+
+                bottomStar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "Add it to favourite", Toast.LENGTH_SHORT).show();
+                        bottomStar.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                        star.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                        addDB();
+                    }
+                });
+            }
         }
         else
         {
             Toast.makeText(this, "No API data", Toast.LENGTH_SHORT).show();
         }
         intialCollapsingToolbar();
+    }
 
-
-        star.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Add it to favourite", Toast.LENGTH_SHORT).show();
-                star.setBackgroundResource(R.drawable.ic_star_black_24dp);
-                bottomStar.setBackgroundResource(R.drawable.ic_star_black_24dp);
-                addDB();
-            }
-        });
-
-
-        bottomStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Add it to favourite", Toast.LENGTH_SHORT).show();
-                bottomStar.setBackgroundResource(R.drawable.ic_star_black_24dp);
-                star.setBackgroundResource(R.drawable.ic_star_black_24dp);
-                addDB();
-            }
-        });
+    public boolean search(Movie movie)
+    {
+        SQLiteDatabase database = MainActivity.taskDBHelper.getReadableDatabase();
+        String query = "select "+TaskContract.TaskEntry.COL_MOVIE_TITLE + " from "+TaskContract.TaskEntry.TABLE +" where "+
+                TaskContract.TaskEntry.COL_MOVIE_TITLE + " = '" + movie.getOriginalTitle() + "'";
+        Cursor cursor = database.rawQuery(query, null);
+        if(cursor.getCount() <= 0) {
+            System.err.println("not found ");
+            cursor.close();
+            return false;
+        }
+        else{
+            System.err.println("found "+ cursor.getCount());
+            cursor.close();
+            return true;
+        }
     }
 
     public void addDB()
@@ -112,14 +159,6 @@ public class DetailActivity extends AppCompatActivity {
 
         database.insertWithOnConflict(TaskContract.TaskEntry.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         database.close();
-
-        Movie movie = new Movie();
-        movie.setOriginalTitle(movieName);
-        movie.setPosterPath(halfPath);
-        movie.setOverview(overview);
-        movie.setReleaseDate(dateRelease);
-        movie.setVoteAverage(rating);
-
         Favorites.movieAaptor.add(movie);
     }
 
