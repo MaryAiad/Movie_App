@@ -50,7 +50,6 @@ public class NowPlaying extends Fragment {
     public View view;
     private TextView textView;
     private int countPlaying = 2;
-    public ProgressDialog progressDialog;
     SwipeRefreshLayout swipeRefreshLayout;
 
     public NowPlaying(){
@@ -59,7 +58,6 @@ public class NowPlaying extends Fragment {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         view = layoutInflater.inflate((R.layout.top_rated),container,false);
-        movieAaptor = new MovieAaptor();
 
         textView = (TextView) view.findViewById(R.id.show_more);
         textView.setVisibility(View.INVISIBLE);
@@ -78,35 +76,12 @@ public class NowPlaying extends Fragment {
         return view;
     }
 
-    private Activity getActivitya() {
-        Context context= getActivity();
-        while(context instanceof ContextWrapper)
-        {
-            if(context instanceof Activity)
-            {
-                return (Activity) context;
-            }
-            context = ((ContextWrapper) context).getBaseContext();
-        }
-        return null;
-    }
-
     private void intiViews() {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Fetchig movies...");
-        progressDialog.setCancelable(true);
-        progressDialog.show();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.tab_one_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        if(getActivitya().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        }else{
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        }
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         connectAndGetApiData();
@@ -130,7 +105,8 @@ public class NowPlaying extends Fragment {
                 if(swipeRefreshLayout.isRefreshing()){
                     swipeRefreshLayout.setRefreshing(false);
                 }
-                progressDialog.dismiss();
+
+                ((MainActivity) getActivity()).progressDialog.dismiss();
 
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -157,10 +133,8 @@ public class NowPlaying extends Fragment {
                     @Override
                     public void onClick(View v) {
                         textView.setVisibility(View.INVISIBLE);
-                        progressDialog = new ProgressDialog(getActivity());
-                        progressDialog.setMessage("Fetchig movies...");
-                        progressDialog.setCancelable(true);
-                        progressDialog.show();
+
+                        ((MainActivity) getActivity()).progressDialog.show();
 
                         Call<MovieResponse> call2 = movieApiService.getNowPlaying(API_KEY, countPlaying);
                         call2.enqueue(new Callback<MovieResponse>() {
@@ -170,7 +144,8 @@ public class NowPlaying extends Fragment {
                                 {
                                     movieAaptor.add(response.body().getResults().get(i));
                                 }
-                                progressDialog.dismiss();
+
+                                ((MainActivity) getActivity()).progressDialog.dismiss();
                             }
 
                             @Override

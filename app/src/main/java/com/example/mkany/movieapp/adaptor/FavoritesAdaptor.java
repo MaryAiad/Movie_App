@@ -24,6 +24,7 @@ import com.example.mkany.movieapp.FavoritesDetails;
 import com.example.mkany.movieapp.MainActivity;
 import com.example.mkany.movieapp.R;
 import com.example.mkany.movieapp.model.Movie;
+import com.example.mkany.movieapp.tabs.Favorites;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,6 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
         this.movies = movies;
         this.rowLayout = rowLayout;
         this.context = context;
-    }
-
-    public FavoritesAdaptor() {
     }
 
     public void add (Movie movie)
@@ -100,7 +98,7 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
     }
 
     @Override
-    public void onBindViewHolder(final MovieViewHolder holder, final int position) {
+    public void onBindViewHolder(final MovieViewHolder holder, int position) {
         Glide.with(context).load(movies.get(position).getPosterPath())
                 .placeholder(R.drawable.ic_loadingcurved)
                 .error(android.R.drawable.sym_def_app_icon)
@@ -118,17 +116,20 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
                         .setMessage("Are you sure remove this film from favorites??!")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int i){
+                                SQLiteDatabase database = null;
+                                if(context instanceof MainActivity){
+                                    database = MainActivity.taskDBHelper.getWritableDatabase();
+                                }
 
-                                SQLiteDatabase database = MainActivity.taskDBHelper.getWritableDatabase();
-                                if(movies.get(position).getOriginalTitle().contains("'")){
+                                if(movies.get(holder.getAdapterPosition()).getOriginalTitle().contains("'")){
                                     database.execSQL("DELETE FROM " + TaskContract.TaskEntry.TABLE+ " WHERE "+
-                                            TaskContract.TaskEntry.COL_MOVIE_Overview+"= '" +movies.get(position).getOverview()+"'");
+                                            TaskContract.TaskEntry.COL_MOVIE_Overview+"= '" +movies.get(holder.getAdapterPosition()).getOverview()+"'");
                                 }
                                 else {
                                     database.execSQL("DELETE FROM " + TaskContract.TaskEntry.TABLE + " WHERE " +
-                                            TaskContract.TaskEntry.COL_MOVIE_TITLE + "= '" + movies.get(position).getOriginalTitle() + "'");
+                                            TaskContract.TaskEntry.COL_MOVIE_TITLE + "= '" + movies.get(holder.getAdapterPosition()).getOriginalTitle() + "'");
                                 }
-                                    database.close();
+                                database.close();
 
                                 TranslateAnimation animation = new TranslateAnimation(0, holder.itemView.getWidth(), 0, 0);
                                 animation.setDuration(500);
@@ -136,14 +137,13 @@ public class FavoritesAdaptor extends RecyclerView.Adapter<FavoritesAdaptor.Movi
                                 animation.setAnimationListener(new Animation.AnimationListener() {
                                     @Override
                                     public void onAnimationStart(Animation animation) {
-                                        imageButton.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
                                     }
 
                                     @Override
                                     public void onAnimationEnd(Animation animation) {
-                                        movies.remove(position);
-                                        notifyItemRemoved(position);
-                                        notifyItemRangeChanged(position, movies.size());
+                                        movies.remove(holder.getAdapterPosition());
+                                        notifyItemRemoved(holder.getAdapterPosition());
+                                        notifyItemRangeChanged(holder.getAdapterPosition(), movies.size());
                                     }
 
                                     @Override

@@ -1,7 +1,9 @@
 package com.example.mkany.movieapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -28,14 +30,12 @@ import com.example.mkany.movieapp.tabs.TopRated;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-    public static final String BASE_URL = "http://api.themoviedb.org/3/";
+public class MainActivity extends AppCompatActivity{
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
     public static TaskDBHelper taskDBHelper;
+    public ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        MainActivity.taskDBHelper = new TaskDBHelper(this);
+        taskDBHelper = new TaskDBHelper(this);
 
         intiViews();
     }
@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intiViews() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Fetchig movies...");
+        progressDialog.setCancelable(true);
+        progressDialog.show();
 
         if(isNetworkConnected())
         {
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener(){
                         public void onClick(DialogInterface dialog, int i){
+                            progressDialog.dismiss();
                         }
                     })
                     .show();

@@ -36,7 +36,6 @@ public class MovieAaptor extends RecyclerView.Adapter<MovieAaptor.MovieViewHolde
 
     public MovieAaptor(List<Movie> movies, int rowLayout, Context context) {
         this.movies = movies;
-
         this.rowLayout = rowLayout;
         this.context = context;
     }

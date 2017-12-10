@@ -35,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
     String thubnail, movieName, overview, dateRelease, halfPath;
     Double rating;
     Movie movie;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +43,6 @@ public class DetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageView  = (ImageView) findViewById(R.id.image_header);
         nameOfMovie = (TextView) findViewById(R.id.movie_title1);
@@ -132,16 +131,21 @@ public class DetailActivity extends AppCompatActivity {
     public boolean search(Movie movie)
     {
         SQLiteDatabase database = MainActivity.taskDBHelper.getReadableDatabase();
-        String query = "select "+TaskContract.TaskEntry.COL_MOVIE_TITLE + " from "+TaskContract.TaskEntry.TABLE +" where "+
-                TaskContract.TaskEntry.COL_MOVIE_TITLE + " = '" + movie.getOriginalTitle() + "'";
+        String query;
+        if(movie.getOriginalTitle().contains("'")){
+            query = "select "+TaskContract.TaskEntry.COL_MOVIE_TITLE + " from "+TaskContract.TaskEntry.TABLE +" where "+
+                    TaskContract.TaskEntry.COL_MOVIE_Overview + " = '" + movie.getOverview() + "'";
+        }
+        else {
+            query = "select " + TaskContract.TaskEntry.COL_MOVIE_TITLE + " from " + TaskContract.TaskEntry.TABLE + " where " +
+                    TaskContract.TaskEntry.COL_MOVIE_TITLE + " = '" + movie.getOriginalTitle() + "'";
+        }
         Cursor cursor = database.rawQuery(query, null);
         if(cursor.getCount() <= 0) {
-            System.err.println("not found ");
             cursor.close();
             return false;
         }
         else{
-            System.err.println("found "+ cursor.getCount());
             cursor.close();
             return true;
         }

@@ -23,7 +23,7 @@ import com.example.mkany.movieapp.DB.TaskDBHelper;
  */
 
 public class FavoritesDetails extends AppCompatActivity{
-    TextView nameOfMovie, plotSynopsis, releaseDate;
+    TextView plotSynopsis, releaseDate;
     ImageView imageView;
     RatingBar ratingBar;
     String thubnail, movieName, overview, rating, dateRelease;
